@@ -1,60 +1,56 @@
-import re
-
-# Daftar port default untuk berbagai skema URI
-DEFAULT_PORTS = {
-    "http": 80,
-    "https": 443,
-    "ftp": 21,
-    "ssh": 22,
-    "telnet": 23,
-    "smtp": 25,
-    "dns": 53,
-    "dhcp": 67,
-    "tftp": 69,
-    "gopher": 70,
-    "finger": 79,
-    "pop3": 110,
-    "nntp": 119,
-    "imap": 143,
-    "snmp": 161,
-    "ldap": 389,
-    "https-alt": 8443,
-    "smtps": 465,
-    "imaps": 993,
-    "pop3s": 995,
-    "rtsp": 554,
-    "sip": 5060,
-    "sips": 5061,
-    "xmpp": 5222,
-    "bittorrent": 6881,
-    "irc": 6667,
-    "rdp": 3389,
-    "mysql": 3306,
-    "postgresql": 5432,
-    "redis": 6379,
-    "mongodb": 27017,
-}
-
-# Regex untuk parsing URI
-URI_REGEX = re.compile(
-    r'^(?P<scheme>[a-zA-Z][a-zA-Z0-9+.-]+)://'  # Skema (http, https, dll.)
-    r'(?:(?P<userinfo>[^@/]+)@)?'  # Opsional: userinfo 
-    r'(?P<host>[^:/?#]+)'  # Host  
-    r'(?::(?P<port>\d+))?'  # Opsional: port (:8080)
-    r'(?P<path>/[^?#]*)?'  # Opsional: path (/docs/resource.txt)
-    r'(?:\?(?P<query>[^#]+))?'  # Opsional: query string (?name=value)
-    r'(?:#(?P<fragment>.*))?$'  # Opsional: fragment (#section1)
-)
-
 def parse_uri(uri):
-    """Fungsi untuk mengekstrak komponen URI menggunakan regex"""
-    match = URI_REGEX.match(uri)
-    if not match:
-        return None
+    """Fungsi untuk mengekstrak komponen URI tanpa menggunakan regex"""
+    
+    components = {
+        "scheme": None,
+        "userinfo": None,
+        "host": None,
+        "port": None,
+        "path": None,
+        "query": None,
+        "fragment": None
+    }
+    
+    # 1. Memisahkan skema (scheme)
+    if "://" in uri:
+        scheme_split = uri.split("://", 1)
+        components["scheme"], uri = scheme_split[0], scheme_split[1]
+    else:
+        return None  # URI tidak valid jika tidak ada skema
+    
+    # 2. Memeriksa adanya fragment (#)
+    if "#" in uri:
+        uri, components["fragment"] = uri.split("#", 1)
 
-    components = match.groupdict()
+    # 3. Memeriksa adanya query string (?)
+    if "?" in uri:
+        uri, components["query"] = uri.split("?", 1)
 
-    # Jika port tidak ada, gunakan port default sesuai skema
+    # 4. Memeriksa adanya userinfo (@)
+    if "@" in uri:
+        userinfo_split = uri.split("@", 1)
+        components["userinfo"], uri = userinfo_split[0], userinfo_split[1]
+
+    # 5. Memeriksa adanya port (:)
+    if "/" in uri:
+        host_port, components["path"] = uri.split("/", 1)
+        components["path"] = "/" + components["path"]
+    else:
+        host_port = uri  # Jika tidak ada path, berarti hanya ada host dan port
+    
+    if ":" in host_port:
+        host_port_split = host_port.split(":", 1)
+        components["host"], components["port"] = host_port_split[0], host_port_split[1]
+    else:
+        components["host"] = host_port
+
+    # 6. Menetapkan port default jika tidak ada
+    DEFAULT_PORTS = {
+        "http": 80, "https": 443, "ftp": 21, "ssh": 22, "telnet": 23, "smtp": 25,
+        "dns": 53, "dhcp": 67, "tftp": 69, "pop3": 110, "imap": 143, "ldap": 389,
+        "mysql": 3306, "postgresql": 5432, "redis": 6379, "mongodb": 27017,
+    }
+    
     if components["port"] is None:
         components["port"] = DEFAULT_PORTS.get(components["scheme"], None)
 
