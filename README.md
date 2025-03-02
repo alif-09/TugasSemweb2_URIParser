@@ -17,6 +17,10 @@ This is a simple web application built with **Streamlit** to parse and extract c
 ✅ **Shows user identity in the sidebar**  
 ✅ **Interactive web interface** built with **Streamlit**  
 
+### 🌐 Live Demo
+Try the deployed version of this app:
+[🔗 URI Parser Live](https://uri-parser.streamlit.app/)
+
 ## 📌 Installation & Usage
 ### 1️⃣ Install Dependencies
 Ensure you have Python installed, then install Streamlit:
