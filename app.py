@@ -1,7 +1,7 @@
 """
 Tugas Semantik Web
 Nama  : Alif Al Husaini
-NIM   : 140810220036
+NPM   : 140810220036
 Deskripsi: Aplikasi Streamlit untuk parsing URI menggunakan regex.
 """
 
@@ -15,7 +15,7 @@ st.set_page_config(page_title="🔍 URI Parser", page_icon="🔗")
 st.sidebar.title("📌 Assignment Info")
 st.sidebar.write("**Tugas Semantik Web**")
 st.sidebar.write("**Nama:** Alif Al Husaini")
-st.sidebar.write("**NIM:** 140810220036")
+st.sidebar.write("**NPM:** 140810220036")
 st.sidebar.write("**Universitas Padjadjaran**")
 
 st.title("🔍 URI Parser with Regex")

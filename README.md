@@ -7,7 +7,7 @@ This is a simple web application built with **Streamlit** to parse and extract c
 **Course:** Semantic Web
 
 **Name:** Alif Al Husaini  
-**NIM:** 140810220036  
+**NPM:** 140810220036  
 **Padjadjaran University**
 
 ## 🛠 Features
